@@ -1,11 +1,28 @@
-# AntOS Kernel
+# ** AntOS Kernel **
 
-**```WELCOME TO THE ANT OS KERNEL REPO!```**
+# What is AntOS
+```
+AntOS is a open source Operating System developed by Proton.
+```
 
-**```I AM JOSCHA EGLOFF, THE CREATOR OF ANT OS.```**
+# How to Contribute
+```
+You can fork the repo and ask me when you want to merge it.
+```
 
-**```PROGAMMING THIS OPERATING SYSTEM WAS DONE FOR LEARNING PRORPOSE...```**
+# Installation
+```
+Right now, there is no way to 'installing' AntOS.
+You will need to compile it!
+```
 
-**```IT DOSN'T REALLY HAVE ANY FUNCTIONAL USE CASES!```**
+# System Requerments
+```
+AntOS runs on most uefi machines.
+But remember that it may have bug... please report them if you can!
+```
 
-**VERSION: 1.0**
+# 
+   ```
+    EXPLORE THE REPO!
+   ```
