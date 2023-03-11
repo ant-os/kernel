@@ -23,3 +23,14 @@ void memset(void* start, uint8_t value, uint64_t num){
         *(uint8_t*)((uint64_t)start + i) = value;
     }
 }
+
+void memcpy(void* source, void* dest, size_t len)
+{
+    int i;
+    //declare string and type casting 
+    char* t = (char*)dest;
+    char* s = (char*)source;
+    //copying "n" bytes of source to target
+    for (i = 0;i < len;i++)
+        t[i] = s[i];
+}

@@ -12,7 +12,7 @@ CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone
 ASMFLAGS = 
 INTFLAGS = -mno-red-zone -mgeneral-regs-only -ffreestanding -fshort-wchar
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
-EMUFLAGS = -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 255M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none -name "$(OSNAME)" $(ARGS)
+EMUFLAGS = -soundhw pcspk -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 255M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none -name "$(OSNAME)" $(ARGS)
 ifdef NOGRAPHIC
 EMUFLAGS += -nographic
 endif

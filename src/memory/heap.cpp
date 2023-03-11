@@ -59,6 +59,16 @@ void* malloc(size_t size) {
     return malloc(size);
 }
 
+void* realloc(void* address, size_t oldSize, size_t size)
+{
+    if (size <= oldSize) return address;
+
+    void* newAddress = malloc(size);
+    memset(newAddress, 0, size);
+    memcpy(address, newAddress, size);
+    free(address);
+}
+
 HeapSegHdr* HeapSegHdr::Split(size_t splitLength) {
     if (splitLength < 0x10) return NULL;
     int64_t splitSegLength = length - splitLength - (sizeof(HeapSegHdr));

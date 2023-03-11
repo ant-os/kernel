@@ -15,6 +15,8 @@
 #include "acpi.h"
 #include "pci.h"
 #include "memory/heap.h"
+#include "scheduling/pit/pit.h"
+#include "PCSpeakers.h"
 
 extern uint64_t _KernelStart;
 extern uint64_t _KernelEnd;
@@ -29,3 +31,5 @@ void EnableKeyboard();
 void DisableKeyboard();
 void EnableMouse();
 void DisableMouse();
+void EnablePIT();
+void DisablePIT();

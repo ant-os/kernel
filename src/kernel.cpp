@@ -13,10 +13,21 @@ extern "C" void _start(BootInfo *bootInfo)
     GlobalRenderer->Print("Welcome to AntOS 1.0!");
     GlobalRenderer->Next();
 
-    //GlobalRenderer->DrawLine(Point{X: 0, Y: 0}, Point{X: (int)GlobalRenderer->GetWidth(), Y: (int)GlobalRenderer->GetHeight()}, GlobalRenderer->Colour);
-    //GlobalRenderer->FillRect(CENTER(GlobalRenderer), 100, 100);
+    PIT::SetDivisor(20000);
+
+    Serial::WriteString(COM1, "PIT Frequency: ");
+    Serial::WriteNumber(COM1, PIT::GetFrequency());
+
+    /* Enables Componentes */
+    EnableKeyboard();
+    EnablePIT();
+    Sound::Speakers::Enable();
 
     Serial::WriteString(COM1, "\n\r~[ AntOS Logging ]~\n\r");
+
+    Sound::Speakers::SetBeepTime(20);
+    Sound::Speakers::SetFrequency(200);
+    Sound::Speakers::Beep();
 
     while (true);
 }

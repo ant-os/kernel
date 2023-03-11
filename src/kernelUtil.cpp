@@ -169,12 +169,20 @@ void PrepareInterrupts()
     ADD_INTERRUPT_HANDLER(
         Keyboard,
         IDT_TA_InterruptGate,
-        0x21);
+        0x21
+    );
 
     ADD_INTERRUPT_HANDLER(
         Mouse,
         IDT_TA_InterruptGate,
-        0x2C);
+        0x2C
+    );
+
+    ADD_INTERRUPT_HANDLER(
+        PIT,
+        IDT_TA_InterruptGate,
+        0x20
+    );
 
     asm("lidt %0"
         :
@@ -234,7 +242,7 @@ KernelInfo *InitializeKernel(BootInfo *bootInfo)
 
 void EnableKeyboard()
 {
-    ShowInfo(COM1, "\r\nKeyboard is Enabled...\n\r");
+    ShowInfo(COM1, "\r\nKeyboard is now Enabled...\n\r");
 
     master_mask = BIT_CLEAR(master_mask, 1);
 
@@ -250,7 +258,7 @@ void EnableKeyboard()
 
 void DisableKeyboard()
 {
-    ShowInfo(COM1, "\r\nKeyboard is Disabled...\n\r");
+    ShowInfo(COM1, "\r\nKeyboard is now Disabled...\n\r");
 
     master_mask = BIT_CLEAR(master_mask, 1);
 
@@ -266,7 +274,7 @@ void DisableKeyboard()
 
 void EnableMouse()
 {
-    ShowInfo(COM1, "\r\nMouse is Enabled...\n\r");
+    ShowInfo(COM1, "\r\nMouse is now Enabled...\n\r");
 
     master_mask = BIT_CLEAR(master_mask, 2);
     slave_mask = BIT_CLEAR(slave_mask, 5);
@@ -283,10 +291,42 @@ void EnableMouse()
 
 void DisableMouse()
 {
-    ShowInfo(COM1, "\r\nMouse is Disabled...\n\r");
+    ShowInfo(COM1, "\r\nMouse is now Disabled...\n\r");
 
     master_mask = BIT_SET(master_mask, 2);
     slave_mask = BIT_SET(slave_mask, 5);
+
+    cli();
+
+    RemapPIC();
+
+    outb(PIC1_DATA, master_mask);
+    outb(PIC2_DATA, slave_mask);
+
+    sti();
+}
+
+void EnablePIT()
+{
+    ShowInfo(COM1, "\r\nPIT is Enabled...\n\r");
+
+    master_mask = BIT_CLEAR(master_mask, 0);
+
+    cli();
+
+    RemapPIC();
+
+    outb(PIC1_DATA, master_mask);
+    outb(PIC2_DATA, slave_mask);
+
+    sti();
+}
+
+void DisablePIT()
+{
+    ShowInfo(COM1, "\r\nPIT is Disabled...\n\r");
+
+    master_mask = BIT_SET(master_mask, 0);
 
     cli();
 

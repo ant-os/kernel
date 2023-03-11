@@ -81,6 +81,7 @@ FAULT_HANDLER(Triple);
 
 INT_HANDLER(Keyboard);
 INT_HANDLER(Mouse);
+INT_HANDLER(PIT);
 
 #define INT(number) asm("int $" #number)
 

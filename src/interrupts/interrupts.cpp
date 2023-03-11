@@ -4,6 +4,7 @@
 #include "../cstr.h"
 #include "../userinput/keyboard.h"
 #include "../userinput/mouse.h"
+#include "../scheduling/pit/pit.h"
 
 FAULT_HANDLER(Page)
 {
@@ -779,6 +780,13 @@ INT_HANDLER(Mouse)
     HandlePS2Mouse(mouseData);
 
     PIC_EndSlave();
+}
+
+INT_HANDLER(PIT)
+{
+    PIT::Tick();
+
+    PIC_EndMaster();
 }
 
 /* PIC Functions */
