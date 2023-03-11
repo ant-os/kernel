@@ -1,5 +1,6 @@
 #include "pci.h"
 
+
 namespace PCI{
 
     void EnumerateFunction(uint64_t deviceAddress, uint64_t function){
@@ -25,7 +26,9 @@ namespace PCI{
             pciDeviceHeader->DeviceID
         ));
         Serial::WriteString(COM1, " / ");
-        Serial::WriteString(COM1, DeviceClasses[pciDeviceHeader->Class]);
+        Serial::WriteString(COM1, GetClassName(
+            pciDeviceHeader->Class
+        ));
         Serial::WriteString(COM1, " / ");
         Serial::WriteString(COM1, GetSubclassName(
             pciDeviceHeader->Class,

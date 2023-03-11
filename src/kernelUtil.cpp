@@ -215,6 +215,8 @@ KernelInfo *InitializeKernel(BootInfo *bootInfo)
 
     memset(bootInfo->framebuffer->BaseAddress, 0, bootInfo->framebuffer->BufferSize);
 
+    InitializeHeap((void*)0x0000100000000000, 0x10);
+
     PrepareInterrupts();
     RemapPIC();
     Serial::InitPort(COM1);

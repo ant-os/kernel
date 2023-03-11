@@ -1,10 +1,39 @@
 #include <stdint.h>
 #include "cstr.h"
+#include "PCIDescriptors.h"
 
 namespace PCI {
 
+    static const char* DeviceClasses[]{
+        "Unclassified",
+        "Mass Storage Controller",
+        "Network Controller",
+        "Display Controller",
+        "Multimedia Controller",
+        "Memory Controller",
+        "Bridge Device",
+        "Simple Communication Controller",
+        "Base System Peripheral",
+        "Input Device Controller",
+        "Docking Station",
+        "Processor",
+        "Serial Bus Controller",
+        "Wireless Controller",
+        "Intelligent Controller",
+        "Satellite Communication Controller",
+        "Encryption Controller",
+        "Signal Processing Controller",
+        "Processing Accelerator",
+        "Non Essential Instrumentation"
+    };
 
-    const char* GetVendorName(uint16_t vendorID) {
+
+    
+    const char* GetClassName(uint8_t classCode)
+    {
+        return DeviceClasses[classCode];
+    }
+const char* GetVendorName(uint16_t vendorID) {
         switch (vendorID) {
         case 0x8086:
             return "Intel Corp";

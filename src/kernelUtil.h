@@ -14,8 +14,7 @@
 #include "userinput/mouse.h"
 #include "acpi.h"
 #include "pci.h"
-
-
+#include "memory/heap.h"
 
 extern uint64_t _KernelStart;
 extern uint64_t _KernelEnd;
