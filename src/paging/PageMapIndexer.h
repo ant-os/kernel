@@ -1,8 +1,8 @@
 #pragma once
 #include <stdint.h>
 
-class PageMapIndexer{
-    public:
+class PageMapIndexer {
+public:
     PageMapIndexer(uint64_t virtualAddress);
     uint64_t PDP_i;
     uint64_t PD_i;

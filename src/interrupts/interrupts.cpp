@@ -9,34 +9,34 @@
 FAULT_HANDLER(Page)
 {
 
-PanicData pd = {
-    /*  REGISTERS  */
-    frame->edi,
-    frame->esi,
-    frame->ebp,
-    frame->esp_dummy,
-    frame->ebx,
-    frame->edx,
-    frame->ecx,
-    frame->eax,
-    frame->gs,
-    frame->fs,
-    frame->es,
-    frame->ds,
+    PanicData pd = {
+        /*  REGISTERS  */
+        frame->edi,
+        frame->esi,
+        frame->ebp,
+        frame->esp_dummy,
+        frame->ebx,
+        frame->edx,
+        frame->ecx,
+        frame->eax,
+        frame->gs,
+        frame->fs,
+        frame->es,
+        frame->ds,
 
-    /* ERROR & FRAME */
+        /* ERROR & FRAME */
 
-    frame->error_code,
+        frame->error_code,
 
-    frame->frame_pointer,
+        frame->frame_pointer,
 
-    /*  BY CPU  */
-    frame->eip,
-    frame->cs,
-    frame->eflags,
-    frame->esp,
-    frame->ss
-};
+        /*  BY CPU  */
+        frame->eip,
+        frame->cs,
+        frame->eflags,
+        frame->esp,
+        frame->ss
+    };
 
     Panic("Page Fault!\n", &pd);
 
@@ -77,7 +77,7 @@ FAULT_HANDLER(Double)
     Panic("Double Fault!\n", &pd);
 
     while (true);
-    
+
 }
 FAULT_HANDLER(GP)
 {
@@ -144,7 +144,7 @@ INT_HANDLER(DivisionError)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Division Error!\n", &pd);
 
@@ -179,7 +179,7 @@ INT_HANDLER(Debug)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Debug!\n", &pd);
 
@@ -215,7 +215,7 @@ INT_HANDLER(Breakpoint)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Breakpoint!\n", &pd);
 
@@ -251,7 +251,7 @@ INT_HANDLER(Overflow)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Overflow!\n", &pd);
 
@@ -287,7 +287,7 @@ INT_HANDLER(BoundRangeExceeded)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Bound Range Exceeded!\n", &pd);
 
@@ -323,7 +323,7 @@ INT_HANDLER(InvalidOpcode)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Invalid Opcode!\n", &pd);
 
@@ -359,7 +359,7 @@ INT_HANDLER(DeviceNotAvailable)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Device Not Available!\n", &pd);
 
@@ -395,7 +395,7 @@ INT_HANDLER(InvalidTSS)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Invalid TSS!\n", &pd);
 
@@ -431,7 +431,7 @@ INT_HANDLER(SegmentNotPresent)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Segment Not Present!\n", &pd);
 
@@ -467,7 +467,7 @@ FAULT_HANDLER(StackSegment)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Stack Segment Fault!\n", &pd);
 
@@ -503,7 +503,7 @@ INT_HANDLER(AlignmentCheck)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Alignment Check!\n", &pd);
 
@@ -539,7 +539,7 @@ INT_HANDLER(MachineCheck)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Machine Check!\n", &pd);
 
@@ -575,7 +575,7 @@ INT_HANDLER(VirtualizationException)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Virtualization Exception!\n", &pd);
 
@@ -611,7 +611,7 @@ INT_HANDLER(ControlProtectionException)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Control Protection Exception!\n", &pd);
 
@@ -647,7 +647,7 @@ INT_HANDLER(HypervisorInjectionException)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Hypervisor Injection Exception!\n", &pd);
 
@@ -683,7 +683,7 @@ INT_HANDLER(VMMCommunicationException)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("VMM Communication Exception!\n", &pd);
 
@@ -719,7 +719,7 @@ INT_HANDLER(SecurityException)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Security Exception!\n", &pd);
 
@@ -755,7 +755,7 @@ FAULT_HANDLER(Triple)
         frame->cs,
         frame->eflags,
         frame->esp,
-        frame->ss};
+        frame->ss };
 
     Panic("Triple Fault!\n", &pd);
 
@@ -835,7 +835,7 @@ void RemapPIC()
     outb(PIC2_DATA, a2);
 }
 
-void DisablePIC(){
+void DisablePIC() {
     cli();
 
     RemapPIC();

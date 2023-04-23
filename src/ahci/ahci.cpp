@@ -1,15 +1,136 @@
 #include "ahci.h"
 #include "../Serial.h"
+#include "../paging/PageTableManager.h"
+#include "../memory/heap.h"
+#include "../bits.h"
+#include "../paging/PageFrameAllocator.h"
 
-namespace AHCI{
+namespace AHCI {
+
+    void Port::Configure() {
+
+        StopCMD();
+
+        void* newBase = GlobalAllocator.RequestPage();
+        hbaPort->commandListBase = (uint32_t)(uint64_t)newBase;
+        hbaPort->commandListBaseUpper = (uint32_t)((uint64_t)newBase >> 32);
+        ZeroMemory(hbaPort->commandListBase, 1024);
+
+        void* fisBase = GlobalAllocator.RequestPage();
+        hbaPort->fisBaseAddress = (uint32_t)(uint64_t)fisBase;
+        hbaPort->fisBaseAddressUpper = (uint32_t)((uint64_t)fisBase >> 32);
+        ZeroMemory(hbaPort->fisBaseAddress, 256);
+
+        HBACommandHeader* cmdHeader = (HBACommandHeader*)COMBINE(hbaPort->commandListBase, hbaPort->commandListBaseUpper);
+
+        for (int i = 0; i < 32; i++)
+        {
+            cmdHeader[i].prdtLength = 8;
+
+            void* cmdTableAddress = GlobalAllocator.RequestPage();
+            uint64_t address = (uint64_t)cmdTableAddress + (i << 8);
+            cmdHeader[i].commandTableBaseAddress = (uint32_t)address;
+            cmdHeader[i].commandTableBaseAddress = (uint32_t)((uint64_t)address >> 32);
+            ZeroMemory(cmdTableAddress, 256);
+
+        }
+
+
+        StartCMD();
+
+    }
+
+    void Port::StopCMD() {
+        BITMASK_CLEAR(hbaPort->cmdSts, HBA_PxCMD_ST);
+        BITMASK_CLEAR(hbaPort->cmdSts, HBA_PxCMD_FRE);
+
+        while (true)
+        {
+            if (BITMASK_CHECK_ANY(hbaPort->cmdSts, HBA_PxCMD_FR)) continue;
+            if (BITMASK_CHECK_ANY(hbaPort->cmdSts, HBA_PxCMD_CR)) continue;
+
+            break;
+        }
+
+
+    }
+
+    void Port::StartCMD() {
+        while (BITMASK_CHECK_ANY(hbaPort->cmdSts, HBA_PxCMD_CR));
+
+        BITMASK_SET(hbaPort->cmdSts, HBA_PxCMD_FRE);
+        BITMASK_SET(hbaPort->cmdSts, HBA_PxCMD_ST);
+
+    }
+
     AHCIDriver::AHCIDriver(PCI::PCIDeviceHeader* pciBaseAddress)
     {
         this->PCIBaseAddress = pciBaseAddress;
-        
+
         ShowSucess(COM1, "\r\nAHCI Driver instance initialized\r\n");
+
+        ABAR = (HBAMemory*)((PCI::PCIHeader0*)pciBaseAddress)->BAR5;
+
+        g_PageTableManager.MapMemory(ABAR, ABAR);
+
+        ProbePorts();
+
+        for (int i = 0; i < portCount; i++)
+        {
+            Port* port = Ports[i];
+
+            if (port->portType == PortType::SATA) Log(, "SATA Port Found!\n");
+            if (port->portType == PortType::SATAPI) Log(, "SATAPI Port Found!\n");
+
+            port->Configure();
+        }
+
     }
 
-    AHCIDriver::~AHCIDriver(){
-    
+    AHCIDriver::~AHCIDriver() {
+
+    }
+
+    void AHCIDriver::ProbePorts()
+    {
+        uint32_t portsImplemented = ABAR->portsImplemented;
+        for (int i = 0; i < 32; i++)
+        {
+            if (portsImplemented & (1 << i)) {
+                PortType portType = CheckPortType(&ABAR->ports[i]);
+
+                if (portType == PortType::SATA || portType == PortType::SATAPI) {
+                    Ports[portCount] = new Port();
+                    Ports[portCount]->portType = portType;
+                    Ports[portCount]->hbaPort = &ABAR->ports[i];
+
+                    portCount++;
+                }
+
+            }
+        }
+    }
+    PortType AHCIDriver::CheckPortType(HBAPort* port)
+    {
+        uint32_t sataStatus = port->sataStatus;
+
+        uint8_t interfacePowerManagement = (sataStatus >> 8) & 0b111;
+        uint8_t deviceDetection = sataStatus & 0b111;
+
+        if (deviceDetection != HBA_PORT_DEVICE_PRESENT) return PortType::None;
+        if (interfacePowerManagement != HBA_PORT_IPM_ACTIVE) return PortType::None;
+
+        switch (port->signature) {
+        case SataSignature::ATAPI:
+            return PortType::SATAPI;
+        case SataSignature::ATA:
+            return PortType::SATA;
+        case SataSignature::SEMB:
+            return PortType::SEMB;
+        case SataSignature::PM:
+            return PortType::PM;
+        default:
+            return PortType::None;
+        }
     }
 } // namespace AHCI

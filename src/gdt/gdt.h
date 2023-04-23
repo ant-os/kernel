@@ -17,7 +17,7 @@ struct GDTEntry
     uint8_t Base2;
 }__attribute__((packed));
 
-struct GDT{
+struct GDT {
     GDTEntry Null;
     GDTEntry KernelCode;
     GDTEntry KernelData;
@@ -25,8 +25,8 @@ struct GDT{
     GDTEntry UserCode;
     GDTEntry UserData;
 } __attribute__((packed))
- __attribute__((aligned(0x1000)));
+__attribute__((aligned(0x1000)));
 
 extern GDT DefaultGDT;
 
-extern "C" void LoadGDT(GDTDescriptor* gdtDescriptor);
+extern "C" void LoadGDT(GDTDescriptor * gdtDescriptor);

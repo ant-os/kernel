@@ -1,5 +1,6 @@
 
 OSNAME = AntOS
+GIT_VERSION := "$(shell git describe --abbrev=4 --dirty --always --tags)"
 
 GNUEFI = ../gnu-efi
 OVMFDIR = ../OVMFbin
@@ -8,7 +9,7 @@ LDS = kernel.ld
 CC = gcc
 ASMC = nasm
 
-CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone
+CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -D__GIT_VERSION__=\"$(GIT_VERSION)\" -fno-exceptions
 ASMFLAGS = 
 INTFLAGS = -mno-red-zone -mgeneral-regs-only -ffreestanding -fshort-wchar
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
@@ -49,17 +50,17 @@ kernel: $(OBJS) link
 $(OBJDIR)/interrupts/interrupts.o : $(SRCDIR)/interrupts/interrupts.cpp
 	@ echo "$(TEXT_START)COMPILING$(TEXT_END)" $^ 
 	@ mkdir -p $(@D)
-	$(CC) -L $(SRCDIR) $(INTFLAGS) -c  $^ -o $@
+	@ $(CC) -L $(SRCDIR) $(INTFLAGS) -D__FILENAME__="\"$(notdir $(basename $^))\"" -c  $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@ echo "$(TEXT_START)COMPILING$(TEXT_END)" $^ 
 	@ mkdir -p $(@D)
-	$(CC) -L $(SRCDIR) $(CFLAGS) -c $^ -o $@
+	@ $(CC) -L $(SRCDIR) $(CFLAGS) -D__FILENAME__="\"$(notdir $(basename $^))\"" -c $^ -o $@
 
 $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 	@ echo "$(TEXT_START)COMPILING$(TEXT_END)" $^ 
 	@ mkdir -p $(@D)
-	$(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
+	@ $(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
 
 link:
 	@ echo "$(TEXT_START)LINKING$(TEXT_END)" $(OBJS)
@@ -92,3 +93,6 @@ deploy: kernel
 	cp $(BUILDDIR)/kernel.elf  $(DEPLOYDIR)/kernel.elf
 	cp $(BUILDDIR)/zap-light16.psf $(DEPLOYDIR)/zap-light16.psf
 	cp startup.nsh $(DEPLOYDIR)/startup.nsh
+
+clean:
+	@rm $(OBJDIR) -r -f

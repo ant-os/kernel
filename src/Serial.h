@@ -3,15 +3,23 @@
 #include "IO.h"
 #include "cstr.h"
 
-#define Log(title,text) \
+#ifndef __FILENAME__
+#undef FILENAME
+#define FILENAME __FILE__
+#else 
+#undef FILENAME
+#define FILENAME __FILENAME__
+#endif
+
+#define Log(res, text) \
     Serial::WriteString(COM1, NEW_LINE); \
-    Serial::WriteString(COM1,title); \
+    Serial::WriteString(COM1,FILENAME); \
     Serial::WriteString(COM1, ": "); \
     Serial::WriteString(COM1, (const char*)text)
 
-#define LogAddress(title, addr) \
+#define LogAddress(res, addr) \
     Serial::WriteString(COM1, NEW_LINE); \
-    Serial::WriteString(COM1,title); \
+    Serial::WriteString(COM1,FILENAME); \
     Serial::WriteString(COM1, ": 0x"); \
     Serial::WriteString(COM1, (const char*)to_hstring((unsigned long) addr))
 

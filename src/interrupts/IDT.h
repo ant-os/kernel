@@ -6,8 +6,8 @@
 #define IDT_TA_TrapGate         0b10001111
 
 struct IDTDescEntry {
-    uint16_t offset0; 
-    uint16_t selector;  
+    uint16_t offset0;
+    uint16_t selector;
     uint8_t ist;
     uint8_t type_attr;
     uint16_t offset1;

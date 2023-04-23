@@ -5,14 +5,14 @@
 #include "memory.h"
 #include "cstr.h"
 
-struct Icon{
+struct Icon {
     int w;
     int h;
     color* data;
 };
 
-class BasicRenderer{
-    public:
+class BasicRenderer {
+public:
     BasicRenderer(Framebuffer* targetFramebuffer, PSF1_FONT* psf1_Font);
     Point CursorPosition;
     Framebuffer* TargetFramebuffer;

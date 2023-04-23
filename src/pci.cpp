@@ -1,5 +1,6 @@
 #include "pci.h"
-
+#include "ahci/ahci.h"
+#include "memory/heap.h"
 
 namespace PCI{
 
@@ -41,6 +42,17 @@ namespace PCI{
             pciDeviceHeader->ProgIF
         ));
         Serial::WriteString(COM1, NEW_LINE);
+
+        switch (pciDeviceHeader->Class) {
+        case 0x01: // mass storage controller
+            switch (pciDeviceHeader->Subclass) {
+            case 0x06: //Serial ATA 
+                switch (pciDeviceHeader->ProgIF) {
+                case 0x01: //AHCI 1.0 device
+                    new AHCI::AHCIDriver(pciDeviceHeader);
+                }
+            }
+        }
     }
 
     void EnumerateDevice(uint64_t busAddress, uint64_t device){

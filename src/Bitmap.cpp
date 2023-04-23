@@ -9,7 +9,7 @@ bool Bitmap::operator[](uint64_t index)
     uint8_t bitIndexer = 0b10000000 >> bitIndex;
 
     if ((Buffer[byteIndex] & bitIndexer) > 0)
-    return true;
+        return true;
 
     return false;
 }
@@ -23,7 +23,7 @@ bool Bitmap::Set(uint64_t index, bool value)
     uint8_t bitIndexer = 0b10000000 >> bitIndex;
 
     Buffer[byteIndex] &= ~bitIndexer;
-    if (value){
+    if (value) {
         Buffer[byteIndex] |= bitIndexer;
     }
 }

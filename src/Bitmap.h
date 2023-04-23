@@ -4,8 +4,8 @@
 #include <stddef.h>
 
 
-class Bitmap{
-    public:
+class Bitmap {
+public:
     size_t Size;
     uint8_t* Buffer;
     bool operator[] (uint64_t index);
