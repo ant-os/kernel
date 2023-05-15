@@ -85,14 +85,20 @@ run:
 	@echo -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" 
 	qemu-system-x86_64 $(EMUFLAGS)
 
-deploy: kernel
-	@mkdir $(DEPLOYDIR)
-	@mkdir $(DEPLOYDIR)/EFI
-	@mkdir $(DEPLOYDIR)/EFI/BOOT
+deploy: clean kernel
+	@echo Creating ISO Structure...
+	@mkdir $(DEPLOYDIR) -p
+	@mkdir $(DEPLOYDIR)/EFI -p
+	@mkdir $(DEPLOYDIR)/EFI/BOOT -p
+	@echo Copying Files...
 	cp $(BOOTEFI) $(DEPLOYDIR)/EFI/BOOT/BOOTX64.EFI
 	cp $(BUILDDIR)/kernel.elf  $(DEPLOYDIR)/kernel.elf
 	cp $(BUILDDIR)/zap-light16.psf $(DEPLOYDIR)/zap-light16.psf
 	cp startup.nsh $(DEPLOYDIR)/startup.nsh
+	@echo Creating ISO...
+	mkisofs -o ../AntOS-$(GIT_VERSION).iso $(DEPLOYDIR)
+	@echo Cleaning up...
+	@rm -rf $(DEPLOYDIR)
 
 clean:
 	@rm $(OBJDIR) -r -f
