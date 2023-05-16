@@ -27,6 +27,7 @@ endif
 SRCDIR := src
 OBJDIR := lib
 BUILDDIR = bin
+IMAGEDIR = ../images
 BOOTEFI := $(GNUEFI)/x86_64/bootloader/main.efi
 
 ROOT := ..
@@ -96,7 +97,7 @@ deploy: clean kernel
 	cp $(BUILDDIR)/zap-light16.psf $(DEPLOYDIR)/zap-light16.psf
 	cp startup.nsh $(DEPLOYDIR)/startup.nsh
 	@echo Creating ISO...
-	mkisofs -o ../AntOS-$(GIT_VERSION).iso $(DEPLOYDIR)
+	mkisofs -o $(IMAGEDIR)/AntOS-$(GIT_VERSION).iso $(DEPLOYDIR)
 	@echo Cleaning up...
 	@rm -rf $(DEPLOYDIR)
 
