@@ -52,7 +52,6 @@ extern "C" void _start(BootInfo * bootInfo)
         GlobalRenderer->Print((const char*)to_string((uint64_t)clock.second));
         GlobalRenderer->Next();
     }
-    
 
 
     while (true);
