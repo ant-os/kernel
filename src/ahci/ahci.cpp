@@ -126,6 +126,7 @@ namespace AHCI {
         return true;
     }
 
+    uint8_t test_buf[(SECTOR_SIZE * 8) + 1] = { 0 };
 
     AHCIDriver::AHCIDriver(PCI::PCIDeviceHeader* pciBaseAddress)
     {
@@ -143,20 +144,17 @@ namespace AHCI {
         {
             Port* port = Ports[i];
 
-            if (port->portType == PortType::SATA) Log(, "SATA Port Found!\n");
-            if (port->portType == PortType::SATAPI) Log(, "SATAPI Port Found!\n");
+            if (port->portType == PortType::SATA) Log(, "SATA Port Found!\n\r");
+            if (port->portType == PortType::SATAPI) Log(, "SATAPI Port Found!\n\r");
 
             port->Configure();
             
             FAT::Filesystem fs = FAT::Filesystem(port);
 
-            if(!fs.Initialize()) continue;
+            if (!fs.Initialize()){
+                ShowError(COM1, "Failed to initialize fs!");
+            }
 
-            int num_sectors = fs.GetSize() / SECTOR_SIZE;
-
-            Serial::WriteString(COM1, "Number of Sectors: ");
-            Serial::WriteNumber(COM1, num_sectors);
-            Serial::Write(COM1, '\n\r');
         }
 
     }

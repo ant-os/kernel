@@ -14,6 +14,8 @@
 #endif
 
 #define TEXT(expr) #expr 
+#define halt_while(con) for(;;(con)) asm("hlt")
+#define halt() for(;;) asm("hlt")
 
 
 #include "Framebuffer.h"
@@ -21,6 +23,10 @@
 #include "math.h"
 #include "efiMemory.h"
 #include "acpi.h"
+
+#define printf Console::WriteFormat
+#define puts Console::WriteString
+#define putc Console::Write
 
 typedef struct boot_info
 {

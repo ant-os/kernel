@@ -1,5 +1,9 @@
 #include "kernelUtil.h"
 #include "RealTimeClock.h"
+#include "DriveList.h"
+#include "Console.h"
+
+static uint32_t currentDrive = 0; 
 
 extern "C" void _start(BootInfo * bootInfo)
 {
@@ -7,52 +11,30 @@ extern "C" void _start(BootInfo * bootInfo)
     KernelInfo* kernelInfo = InitializeKernel(bootInfo);
     PageTableManager* pageTableManager = kernelInfo->pageTableManager;
 
+    InitializeDriveList((uint32_t)32);
+
+    AddDrive(Drive(1, "System"));
+
     GlobalRenderer->CursorPosition = { 0, 0 };
-    GlobalRenderer->Print("Kernel Initialized Sucessfully");
-    GlobalRenderer->Next();
-    GlobalRenderer->Print("Welcome to AntOS 1.0!");
-    GlobalRenderer->Next();
+
+    printf("Kernel Initialized Sucessfully!\n");
+    printf("\nAntOS %s [ %s ]\n", __GIT_VERSION__, __COMPILE_DATETIME__);
+    printf("(c) 2022-2023 Joscha Egloff\n\n");
 
     PIT::SetDivisor(20000);
-
-    Serial::WriteString(COM1, "PIT Frequency: ");
-    Serial::WriteNumber(COM1, PIT::GetFrequency());
 
     /* Enables Componentes */
     EnableKeyboard();
     EnablePIT();
-    Sound::Speakers::Enable();
 
-    Serial::WriteString(COM1, "\n\r~[ AntOS Logging ]~\n\r");
+    PIT::Sleep(1343);
+    printf("\xE0\n");
 
-    Sound::Speakers::SetBeepTime(20);
-    Sound::Speakers::SetFrequency(200);
-    Sound::Speakers::Beep();
+    printf("Label of %c is %s\n", GetDrive(currentDrive)->DriveLetter(), GetDrive(currentDrive)->Label());
+    
+    PIT::Sleep(983);
 
-    Log("KERNEL", "Hello World");
+    printf("%c:/>", GetDrive(currentDrive)->DriveLetter());
 
-    while (true)
-    {
-        PIT::Sleep(1000);
-
-        RTC::ClockStatus clock = RTC::Read();
-
-        GlobalRenderer->Clear();
-        GlobalRenderer->CursorPosition = {0,0};
-        GlobalRenderer->Print((const char*)to_string((uint64_t)clock.month));
-        GlobalRenderer->Print("/");
-        GlobalRenderer->Print((const char*)to_string((uint64_t)clock.day));
-        GlobalRenderer->Print("/");
-        GlobalRenderer->Print((const char*)to_string((uint64_t)clock.year));
-        GlobalRenderer->Print(" ");
-        GlobalRenderer->Print((const char*)to_string((uint64_t)clock.hour));
-        GlobalRenderer->PutChar(':');
-        GlobalRenderer->Print((const char*)to_string((uint64_t)clock.minute));
-        GlobalRenderer->PutChar(':');
-        GlobalRenderer->Print((const char*)to_string((uint64_t)clock.second));
-        GlobalRenderer->Next();
-    }
-
-
-    while (true);
+    halt();
 }

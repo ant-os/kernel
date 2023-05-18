@@ -5,7 +5,9 @@
 #include <stdarg.h>
 #include <limits.h>
 
-static char* _;
+static void* _;
+
+typedef char* cstring;
 
 #define NEW_LINE "\n"
 #define STR_TERMINATE "\0";
@@ -22,4 +24,7 @@ const char* to_hstring(uint8_t value);
 const char* to_string(double value, uint8_t decimalPlaces);
 const char* to_string(double value);
 const char* format(const char* fmt, ...);
-size_t strlen(char*);
+size_t strlen(const char* str);
+char* strchr(const char* str, int c);
+int toupper(int c);
+int tolower(int c);

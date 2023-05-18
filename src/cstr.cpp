@@ -56,13 +56,38 @@ const char* to_hstring(uint32_t value){
     return hexTo_StringOutput32;
 }
 
-size_t strlen(const char *str)
-{
+size_t strlen(const char* str) {
     size_t len = 0;
-    while (str[len])
+    while (str[len] != '\0') {
         len++;
+    }
     return len;
 }
+
+char* strchr(const char* str, int c) {
+    while (*str != '\0') {
+        if (*str == c) {
+            return (char*)str;
+        }
+        str++;
+    }
+    return NULL;
+}
+
+int toupper(int c) {
+    if (c >= 'a' && c <= 'z') {
+        return c - 32;
+    }
+    return c;
+}
+
+int tolower(int c) {
+    if (c >= 'A' && c <= 'Z') {
+        return c + 32;
+    }
+    return c;
+}
+
 
 char hexTo_StringOutput16[128];
 const char* to_hstring(uint16_t value){

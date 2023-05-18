@@ -34,3 +34,16 @@ void memcpy(void* source, void* dest, size_t len)
     for (i = 0;i < len;i++)
         t[i] = s[i];
 }
+
+int memcmp(void* ptr1, void* ptr2, size_t num) {
+    int* p1 = (int*)ptr1;
+    int* p2 = (int*)ptr2;
+
+    for (size_t i = 0; i < num; i++) {
+        if (p1[i] != p2[i]) {
+            return p1[i] - p2[i];
+        }
+    }
+
+    return 0;
+}
