@@ -88,6 +88,20 @@ int tolower(int c) {
     return c;
 }
 
+int strcmp(cstring s1, cstring s2)
+{
+    while (*s1) {
+        if (*s1 != *s2) {
+            break;
+        }
+
+        ++s1;
+        ++s2;
+    }
+
+    return *s1 - *s2;
+}
+
 
 char hexTo_StringOutput16[128];
 const char* to_hstring(uint16_t value){

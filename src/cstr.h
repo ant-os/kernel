@@ -28,3 +28,4 @@ size_t strlen(const char* str);
 char* strchr(const char* str, int c);
 int toupper(int c);
 int tolower(int c);
+int strcmp(cstring a, cstring b);
