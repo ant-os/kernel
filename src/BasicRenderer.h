@@ -38,6 +38,7 @@ public:
     unsigned int GetPixelsPerScanLine();
     void ClearC(color colour);
     void ClearChar();
+    void ClearLine();
 };
 
 #define CENTER(rp)                                               \

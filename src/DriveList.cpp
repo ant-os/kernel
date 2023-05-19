@@ -51,10 +51,11 @@ Drive* GetDrive(uint32_t offset)
 
 bool RemoveDrive(uint32_t offset)
 {
-    if (!DriveList) Err();
-    if (!(void*)(DriveList + offset) == NULL) Err();
 
     DriveList[offset] = {-1, (cstring)"<invalid>"};
+    DriveList[offset]._ConfigureLetter('?');
+
+    --DriveCount; 
 
     Ok();
 }

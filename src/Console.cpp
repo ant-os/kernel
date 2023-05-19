@@ -64,7 +64,9 @@ void Console::WriteFormat(const char* fmt, ...)
             case 'c':
                 Write((char)va_arg(args, int));
                 break;
-
+            case 'f':
+                WriteString(to_string(va_arg(args, double)));
+                break;
             case 's':
                 WriteString(va_arg(args, const char*));
                 break;

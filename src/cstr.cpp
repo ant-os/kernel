@@ -137,6 +137,29 @@ const char* to_hstring(uint8_t value){
     return hexTo_StringOutput8;
 }
 
+char* strstr(const char* haystack, const char* needle) {
+    return (char*)strstr(haystack, needle);
+}
+
+char* strtok(char* str, const char* delimiters) {
+    return strtok(str, delimiters);
+}
+
+char* strpbrk(const char* str, const char* delimiters) {
+    while (*str) {
+        const char* d = delimiters;
+        while (*d) {
+            if (*str == *d) {
+                return (char*)str;
+            }
+            d++;
+        }
+        str++;
+    }
+
+    return NULL;
+}
+
 char intTo_StringOutput[128];
 const char* to_string(int64_t value){
     uint8_t isNegative = 0;
@@ -202,4 +225,112 @@ const char* to_string(double value, uint8_t decimalPlaces){
 
 const char* to_string(double value){
     return to_string(value, 2);
+}
+
+char* strdup(const char* str) {
+    size_t len = strlen(str) + 1;
+    char* dup = (char*)malloc(len);
+    if (dup) {
+        memcpy(dup, (void*)str, len);
+    }
+    return dup;
+}
+
+string::string(const char* str)
+{
+    m_size = strlen(str);
+    m_compacity = m_size + 1;
+
+    // m_buffer = (char*)malloc(m_compacity * sizeof(char));
+    m_buffer = (char*)str;
+}
+
+void string::to_upper()
+{
+    for (size_t i = 0; i < strlen(m_buffer); i++)
+    {
+        m_buffer[i] = toupper(m_buffer[i]);
+    }
+}
+
+void string::to_lower()
+{
+    for (size_t i = 0; i < strlen(m_buffer); i++)
+    {
+        m_buffer[i] = tolower(m_buffer[i]);
+    }
+}
+
+size_t string::character(size_t startIdx, char c)
+{
+    for (size_t i = startIdx; i < strlen(m_buffer); i++)
+    {
+        if(m_buffer[i] == c)
+            return i + 1;
+    }
+
+    return 0;
+}
+
+StringSplit string::split(const char* delimiter, int* count) {
+    const char* s = m_buffer;
+    int delimiter_count = 0;
+
+    // Count the number of delimiters in the string
+    while (*s) {
+        if (strstr(s, delimiter) == s) {
+            delimiter_count++;
+            s += strlen(delimiter);
+        }
+        else {
+            s++;
+        }
+    }
+
+    // Allocate memory for the array of substrings
+    char** substrings = (char**)malloc((delimiter_count + 1) * sizeof(char*));
+
+    // Split the string into substrings
+    int index = 0;
+    char* buffer = strdup(m_buffer); // Create a mutable copy of the string
+    char* token = strtok(buffer, delimiter);
+    while (token) {
+        substrings[index++] = token;
+        token = strtok(NULL, delimiter);
+    }
+
+    *count = delimiter_count + 1;
+
+    StringSplit result;
+    result.strings = substrings;
+    result.count = *count;
+
+    return result;
+}
+
+
+char string::startswith(char* s)
+{
+    for (size_t i = 0; i < strlen(s); i++)
+    {
+        if (m_buffer[i] != s[i]){
+            return m_buffer[i];
+        }
+    }
+    
+    return (char)0;
+}
+
+char* string::as_ptr()
+{
+    return (char*)m_buffer;
+}
+
+size_t string::size()
+{
+    return m_size;
+}
+
+bool string::operator==(const char* other){
+    return strcmp(m_buffer, (cstring)other) == 0;
 }

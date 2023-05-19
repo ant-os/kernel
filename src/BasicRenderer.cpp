@@ -286,3 +286,13 @@ void BasicRenderer::ClearChar()
             CursorPosition.Y = 0;
     }
 }
+
+void BasicRenderer::ClearLine()
+{
+    for (size_t i = 0; i < GetHeight(); i++)
+    {
+        PutChar(' ',  i, CursorPosition.Y);
+    }
+    
+    
+}

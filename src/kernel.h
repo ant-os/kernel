@@ -28,6 +28,8 @@
 #define puts Console::WriteString
 #define putc Console::Write
 
+#define MULTIOR_EQ(expr, val1, val2) (expr == val1 || expr == val2)
+
 typedef struct boot_info
 {
     Framebuffer* framebuffer;
