@@ -5,6 +5,9 @@
 #include "../bits.h"
 #include "../paging/PageFrameAllocator.h"
 #include "../filesystems/FAT.h"
+#include "../DriveList.h"
+
+#include <ant/memory.h>
 
 unsigned char buf[520];
 
@@ -134,6 +137,9 @@ namespace AHCI {
 
         ShowSucess(COM1, "\r\nAHCI Driver instance initialized\r\n");
 
+
+        InitializeDriveList((uint32_t)32);
+
         ABAR = (HBAMemory*)((PCI::PCIHeader0*)pciBaseAddress)->BAR5;
 
         g_PageTableManager.MapMemory(ABAR, ABAR);
@@ -144,18 +150,28 @@ namespace AHCI {
         {
             Port* port = Ports[i];
 
-            if (port->portType == PortType::SATA) Log(, "SATA Port Found!\n\r");
-            if (port->portType == PortType::SATAPI) Log(, "SATAPI Port Found!\n\r");
+            char* drive_label = (char*)malloc(12);
+
 
             port->Configure();
-            
+
             FAT::Filesystem fs = FAT::Filesystem(port);
 
-            if (!fs.Initialize()){
-                ShowError(COM1, "Failed to initialize fs!");
+            fs.Initialize();
+
+            char* label = (char*)fs.GetBootSector()->EBR1216.VolumeLabel;
+
+            for (size_t i = 0; i < 11; i++)
+            {
+                drive_label[i] = label[i];
             }
+            
+
+            AddDrive(Drive(fs.GetBootSector()->EBR1216.DriveNumber, drive_label, (size_t)((uint64_t)fs.GetTotalSectors() * SECTOR_SIZE)));
 
         }
+
+
 
     }
 

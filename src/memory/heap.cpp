@@ -1,4 +1,5 @@
 #include "heap.h"
+#include <ant/memory.h>
 
 void* heapStart;
 void* heapEnd;
@@ -59,9 +60,8 @@ void* malloc(size_t size) {
     return malloc(size);
 }
 
-void* realloc(void* address, size_t oldSize, size_t size)
+void* realloc(void* address, size_t size)
 {
-    if (size <= oldSize) return address;
 
     void* newAddress = malloc(size);
     memset(newAddress, 0, size);

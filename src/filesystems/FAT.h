@@ -5,6 +5,7 @@
 #include "../memory/heap.h"
 #include "../math.h"
 #include "../cstr.h"
+#include <ant/cstring.h>
 
 typedef void* buffer_t;
 

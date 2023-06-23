@@ -3,6 +3,7 @@
 #include "../pci.h"
 #include "../bits.h"
 
+
 #define NAMED(name) namespace name
 #define ENUM enum
 

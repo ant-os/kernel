@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include <ant/memory.h>
 
 bool isLeftShiftPressed;
 bool isRightShiftPressed;
@@ -46,6 +47,7 @@ void HandleKeyboard(uint8_t scancode)
             break;
         }
         --InputBufferPosition;
+        InputBuffer[InputBufferPosition] = '\0';
         return;
     }
 
@@ -56,6 +58,8 @@ void HandleKeyboard(uint8_t scancode)
     if (ascii != 0)
     {
         GlobalRenderer->PutChar(ascii);
+
+         /* Serial::WriteFormat(COM1, " %d ==> %d ==> %c ", scancode, ascii, ascii); */
 
         if (InputBufferPosition < INPUT_BUFFER_SIZE){
             InputBuffer[InputBufferPosition] = ascii;

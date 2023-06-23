@@ -1,4 +1,5 @@
 #include "PageFrameAllocator.h"
+#include <ant/memory.h>
 
 uint64_t freeMemory;
 uint64_t reservedMemory;
@@ -73,6 +74,11 @@ void PageFrameAllocator::FreePages(void* address, uint64_t pageCount)
     }
 }
 
+void PageFrameAllocator::FreeSection(SECTION_OBJECT Section)
+{
+    FreePages(Section.Base, Section.Size / 4096 + 1);
+}
+
 void PageFrameAllocator::LockPage(void* address)
 {
     uint64_t index = (uint64_t)address / 4096;
@@ -91,6 +97,12 @@ void PageFrameAllocator::LockPages(void* address, uint64_t pageCount)
         LockPage((void*)((uint64_t)address + (t * 4096)));
     }
 }
+
+void PageFrameAllocator::LockSection(SECTION_OBJECT Section)
+{
+    LockPages(Section.Base, Section.Size / 4096 + 1);
+}
+
 
 void* PageFrameAllocator::RequestPage()
 {

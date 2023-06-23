@@ -1,0 +1,74 @@
+-drive if=pflash,format=raw,unit=1,file=../OVMFbin/OVMF_VARS-pure-efi.fd
+[2J[01;01H[=3h[2J[01;01H[0m[35m[40m[0m[37m[40mBdsDxe: loading Boot0002 "EFI Internal Shell" from Fv(7CB8BDC9-F8EB-4F34-AAEA-3EE4AF6516A1)/FvFile(7C04A583-9E3E-4F1C-AD65-E05268D0B4D1)
+BdsDxe: starting Boot0002 "EFI Internal Shell" from Fv(7CB8BDC9-F8EB-4F34-AAEA-3EE4AF6516A1)/FvFile(7C04A583-9E3E-4F1C-AD65-E05268D0B4D1)
+[2J[01;01H[01;01HUEFI Interactive Shell v2.2
+EDK II
+UEFI v2.70 (EDK II, 0x00010000)
+[1m[33m[40mMapping table[0m[37m[40m
+[1m[33m[40m      FS0:[0m[37m[40m [1m[37m[40mAlias(s):[0m[37m[40mF0a65535a:;BLK0:
+          PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+[1m[33m[40m     BLK1:[0m[37m[40m [1m[37m[40mAlias(s):[0m[37m[40m
+          PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x2,0xFFFF,0x0)
+[09;01HPress [1m[37m[40mESC[0m[37m[40m in 5 seconds to skip [1m[33m[40mstartup.nsh[0m[37m[40m or any other key to continue.
+[2J[01;01H[2J[01;01H[2J[01;01HFound bootloader on fs0:
+AntOS Bootloader 1.0 
+Kernel Loaded Successfully 
+kernel header successfully verified
+Kernel Loaded
+Font found. char size = 16
+GOP located
+Base: 0xC0000000
+Size: 0x7E9000
+Width: 1920
+Height: 1080
+PixelsPerScanline: 1920
+ReadMiniFSDriver() =>  [0]->(11208 | 3E4F8018)Boot Info Created!
+Boot Serviced Exited![33;1;11m[Tables][0m
+kernelUtil: 0x000000003FB7E014
+kernelUtil: 0x000000003FB7D074
+kernelUtil: 0x000000003FB7D0E8
+kernelUtil: 0x000000003FB76000
+[33;1;11m[Devices][0m
+Intel Corp / Express DRAM Controller / Bridge Device / Host Bridge / 00
+
+1234 / 1111 / Display Controller / VGA Compatible Controller / VGA Controller
+
+Intel Corp / LPC Interface Controller / Bridge Device / ISA Bridge / 00
+
+Intel Corp / 6 port SATA Controller [AHCI mode] / Mass Storage Controller / Serial ATA / AHCI 1.0
+[32;1;11m
+AHCI Driver instance initialized
+[0m
+FAT: Creating Filesystem object for Port Number 0[34;1;11mDistroying Filesystem object!
+[0m
+FAT: Creating Filesystem object for Port Number 0[34;1;11mDistroying Filesystem object!
+[0m
+Intel Corp / SMBus Controller / Serial Bus Controller / SMBus / 00
+[33;1;11m
+Keyboard is now Enabled...
+[0m[33;1;11m
+PIT is Enabled...
+[0mDriver Entry: 0x000000003E8F9018
+
+===== Begin Kernel Panic =====
+
+Error: 0x822257C7 (Invalid Opcode!)
+Frame Pointer: 0x00000000
+Error Code: 0x00013360
+EIP: 0x3FF073D0
+EDI: 0x3EB1401A
+ESI: 0x00000000
+EBP: 0x00000008
+EBX: 0x00000206
+EDX: 0x00000000
+ECX: 0x3FF07288
+EAX: 0x00000000
+GS: 0x00000010
+FS: 0x00000010
+ES: 0x00000010
+DS: 0x00000010
+* ... 00[0m 1C[0m 00[0m 1B[0m 00[0m [31;1;11m!40[0m 10[0m 4F[0m 3E[0m 00[0m ... *
+Binary: <KERNEL>
+===== End Kernel Panic =====
+
+Kernel Size: 0  bytes!

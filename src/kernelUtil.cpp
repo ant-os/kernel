@@ -2,6 +2,9 @@
 #include "gdt/gdt.h"
 #include "interrupts/IDT.h"
 #include "bits.h"
+#include "DriveList.h"
+
+#include <ant/memory.h>
 
 KernelInfo kernelInfo;
 void PrepareMemory(BootInfo *bootInfo)
@@ -33,6 +36,13 @@ void PrepareMemory(BootInfo *bootInfo)
     {
         g_PageTableManager.MapMemory((void*)t, (void*)t);
     }
+
+    if (bootInfo->MiniFS.Status == 0) {
+        SECTION_OBJECT MiniFSDriverSection{ (void*)bootInfo->MiniFS.Base, bootInfo->MiniFS.Size };
+
+        GlobalAllocator.LockSection(MiniFSDriverSection);
+    }
+
 
     asm("mov %0, %%cr3"
         :
@@ -225,9 +235,11 @@ KernelInfo *InitializeKernel(BootInfo *bootInfo)
 
     InitializeHeap((void*)0x0000100000000000, 0x10);
 
+
     PrepareInterrupts();
     RemapPIC();
     Serial::InitPort(COM1);
+
 
     PrepareACPI(bootInfo);
 
@@ -323,9 +335,9 @@ void EnablePIT()
 }
 
 void DisablePIT()
+
 {
     ShowInfo(COM1, "\r\nPIT is Disabled...\n\r");
-
     master_mask = BIT_SET(master_mask, 0);
 
     cli();

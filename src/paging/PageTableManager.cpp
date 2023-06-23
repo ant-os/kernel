@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include "PageFrameAllocator.h"
 #include "../memory.h"
+#include <ant/memory.h>
 
 PageTableManager g_PageTableManager = 0;
 

@@ -4,6 +4,7 @@
 #include "../efiMemory.h"
 #include "../Bitmap.h"
 #include "../memory.h"
+#include "../Section.h"
 
 class PageFrameAllocator
 {
@@ -12,8 +13,10 @@ class PageFrameAllocator
     Bitmap PageBitmap;
     void FreePage(void* address);
     void FreePages(void* address, uint64_t pageCount);
+    void FreeSection(SECTION_OBJECT Section);
     void LockPage(void* address);
     void LockPages(void* address,uint64_t pageCount);
+    void LockSection(SECTION_OBJECT Section);
 
     void* RequestPage();
 

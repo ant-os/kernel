@@ -3,9 +3,10 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "cstr.h"
+#include "Console.h"
 #include "Serial.h"
 
-#define PRINT_MSG(title, msg) GlobalRenderer->Print(title); GlobalRenderer->Print(": "); GlobalRenderer->Print(msg); GlobalRenderer->Next()
+#define PRINT_MSG(title, msg) Console::WriteFormat("%s: 0x%x\n", title, msg); Serial::WriteFormat(COM1, "%s: 0x%x\n", title, msg);
 
 struct PanicData
 {

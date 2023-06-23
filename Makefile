@@ -7,18 +7,26 @@ OVMFDIR = ../OVMFbin
 DEPLOYDIR = ../deploy
 LDS = kernel.ld
 CC = gcc
+LD = ld
 ASMC = nasm
+STDLIB = antc.a
+ANTC_PATH := /home/joscha/projects/AntC/
+DRV_MiniFS = /home/joscha/projects/antDriver/MiniFS/bin/MiniFS.drv
 
-CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -D__GIT_VERSION__=\"$(GIT_VERSION)\" -D__COMPILE_DATETIME__=\"$(COMPILE_DATETIME)\" -fno-exceptions
+CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -D__GIT_VERSION__=\"$(GIT_VERSION)\" -D__COMPILE_DATETIME__=\"$(COMPILE_DATETIME)\" -fno-exceptions -isystem $(ANTC_PATH)/include/ -include "ant/stdbase.h"
 ASMFLAGS = 
 INTFLAGS = -mno-red-zone -mgeneral-regs-only -ffreestanding -fshort-wchar
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
-EMUFLAGS = -soundhw pcspk -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 255M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none -name "$(OSNAME)" $(ARGS)
+EMUFLAGS = -soundhw pcspk -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 1G -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE-pure-efi.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" -net none -name "$(OSNAME)" $(ARGS)
 ifdef NOGRAPHIC
+ifdef DEBUG
+EMUFLAGS += -s -S
+endif
 EMUFLAGS += -nographic
 endif
 ifdef SERIAL
 EMUFLAGS += -serial $(SERIAL)
+#EMUFLAGS += -serial tcp::1234,server,nowait
 endif
 ifdef NETWORK
 EMUFLAGS += -net $(NETWORK)
@@ -65,7 +73,7 @@ $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 
 link:
 	@ echo "$(TEXT_START)LINKING$(TEXT_END)" $(OBJS)
-	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
+	$(LD) -L$(ANTC_PATH)/bin -l:$(STDLIB) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
 setup:
 	@mkdir $(BUILDDIR)
 	@mkdir $(SRCDIR)
@@ -76,11 +84,13 @@ buildimg:
 	mformat -v "AntOS$(GIT_VERSION)" -i $(BUILDDIR)/$(OSNAME).img ::
 	mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI
 	mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI/BOOT
+	mmd -i $(BUILDDIR)/$(OSNAME).img ::/DRIVERS
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BOOTEFI) ::/EFI/BOOT
 	mcopy -i $(BUILDDIR)/$(OSNAME).img startup.nsh ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(ROOT)/README.MD ::
+	mcopy -i $(BUILDDIR)/$(OSNAME).img $(DRV_MiniFS) ::
 
 run:	
 	@echo -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS-pure-efi.fd" 

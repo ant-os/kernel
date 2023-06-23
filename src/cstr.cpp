@@ -1,4 +1,6 @@
 #include "cstr.h"
+#include <ant/cstring.h>
+#include <ant/memory.h>
 
 char uintTo_StringOutput[128];
 const char* to_string(uint64_t value){
@@ -138,7 +140,18 @@ const char* to_hstring(uint8_t value){
 }
 
 char* strstr(const char* haystack, const char* needle) {
-    return (char*)strstr(haystack, needle);
+    if (!*needle) return (char*)haystack;
+    char* p1 = (char*)haystack;
+    while (*p1) {
+        char* p1Begin = p1, * p2 = (char*)needle;
+        while (*p1 && *p2 && *p1 == *p2) {
+            p1++;
+            p2++;
+        }
+        if (!*p2) return p1Begin;
+        p1 = p1Begin + 1;
+    }
+    return NULL;
 }
 
 char* strtok(char* str, const char* delimiters) {

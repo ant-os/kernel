@@ -29,11 +29,16 @@ int Serial::Received(SerialPort port)
     return inb(port + 5) & 1;
 }
 
+inline char Serial::ForceRead(SerialPort port)
+{
+    return inb(port);
+}
+
 char Serial::Read(SerialPort port)
 {
     while (Received(port) == 0);
 
-    return inb(port);
+    return ForceRead(port);
 }
 
 int Serial::IsTransmitEmpty(SerialPort port)
@@ -66,4 +71,77 @@ void Serial::WriteAddress(SerialPort port, unsigned long addr)
 {
     WriteString(port, "0x");
     WriteString(port, to_hstring(addr));
+}
+
+enum FROMAT_STATE {
+    FSTATE_NORMAL = 0,
+    FSTATE_FORMAT = 1
+};
+
+void Serial::WriteFormat(SerialPort port, const char* fmt, ...)
+{
+    va_list args;
+
+    va_start(args, fmt);
+
+    FROMAT_STATE state = FSTATE_NORMAL;
+
+    while (*fmt != '\0')
+    {
+        switch (state)
+        {
+        case FSTATE_NORMAL:
+            switch (*fmt)
+            {
+            case '%':
+                state = FSTATE_FORMAT;
+                break;
+            default:
+                Write(port, *fmt);
+                break;
+            }
+            break;
+
+        case FSTATE_FORMAT:
+            switch (*fmt)
+            {
+            case 'c':
+                Write(port, (char)va_arg(args, int));
+                break;
+            case 'f':
+                WriteString(port, to_string(va_arg(args, double)));
+                break;
+            case 's':
+                WriteString(port, va_arg(args, const char*));
+                break;
+            case 'd':
+                WriteString(port, to_string(va_arg(args, int64_t)));
+                break;
+            case 'u':
+                WriteString(port, to_string(va_arg(args, uint64_t)));
+                break;
+            case 'x':
+                WriteString(port, to_hstring(va_arg(args, uint32_t)));
+                break;
+            case 'p':
+                WriteString(port, to_hstring(va_arg(args, uint64_t)));
+                break;
+
+            default:
+                break;
+            }
+            state = FSTATE_NORMAL;
+            break;
+
+        default:
+            break;
+        }
+
+        ++fmt;
+    }
+
+
+
+    va_end(args);
+
 }

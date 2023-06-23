@@ -1,5 +1,7 @@
 #include "kbScancodeTranslation.h"
 
+/// IMPORTANT: We need to fix the key set!! As soon as possible!! Right Now None of these character can be inputed: !@#$%^&*()_+...!
+
 namespace QWERTYKeyboard
 {
 
@@ -21,6 +23,25 @@ namespace QWERTYKeyboard
         0, ' '
     };
 
+    const char ASCIITableUpper[] = { //  !@#$ % ^&*()_ +
+    0, 0, '!', '@',
+    '#', '$', '%', '^',
+    '&', '*', '(', ')',
+    '_', '+', 0, 0,
+    'Q', 'W', 'E', 'R',
+    'T', 'Y', 'U', 'I',
+    'O', 'P', '{', '}',
+    0, 0, 'A', 'S',
+    'D', 'F', 'G', 'H',
+    'J', 'K', 'L', ':',
+    '\"', '`', 0, '|',
+    'Z', 'X', 'C', 'V',
+    'B', 'N', 'M', '<',
+    '>', '?', 0, '?',
+    0, ' '
+    };
+
+
     char Translate(uint8_t scancode, bool uppercase)
     {
         if (scancode > 58)
@@ -28,7 +49,8 @@ namespace QWERTYKeyboard
 
         if (uppercase)
         {
-            return ASCIITable[scancode] - 32;
+
+            return ASCIITableUpper[scancode];
         }
         else
             return ASCIITable[scancode];

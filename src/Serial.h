@@ -24,7 +24,7 @@
     Serial::WriteString(COM1, (const char*)to_hstring((unsigned long) addr))
 
 #pragma GCC diagnostic push
-typedef enum SerialPort
+enum SerialPort
 {
     COM1 = 0x3F8,
     COM2 = 0x2F8,
@@ -42,12 +42,17 @@ namespace Serial
 
     int InitPort(SerialPort addr);
     int Received(SerialPort port);
+    /// @warning This can couse unexpected behavior!
+    inline char ForceRead(SerialPort port);
     char Read(SerialPort port);
     int IsTransmitEmpty(SerialPort port);
     void Write(SerialPort port, char a);
     void WriteString (SerialPort port, const char* str);
     void WriteNumber(SerialPort port, uint64_t num);
     void WriteAddress(SerialPort port, unsigned long addr);
+    void WriteFormat(SerialPort port, const char* fmt, ...);
+
+#define SetHostColor(port, col) Serial::WriteFormat(port, "\033[%d;1;11m", col)
 
     #define ShowError(port, err) Serial::WriteString(port, ("\033[31;1;11m" \
                                                             err       \

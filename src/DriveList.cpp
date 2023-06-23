@@ -2,11 +2,12 @@
 
 
 
-Drive::Drive(int32_t id, cstring label)
+Drive::Drive(int32_t id, cstring label, size_t size)
 {
     m_DriveID = id;
     m_Label = label;
     m_DriveLetter = '?';
+    m_Size = size;
 }
 
 int32_t Drive::DriveID()
@@ -22,6 +23,11 @@ char Drive::DriveLetter()
 cstring Drive::Label()
 {
     return m_Label;
+}
+
+size_t Drive::Size()
+{
+    return m_Size;
 }
 
 void Drive::_ConfigureLetter(char _letter)
@@ -52,7 +58,7 @@ Drive* GetDrive(uint32_t offset)
 bool RemoveDrive(uint32_t offset)
 {
 
-    DriveList[offset] = {-1, (cstring)"<invalid>"};
+    DriveList[offset] = {-1, (cstring)"<invalid>", (size_t)0};
     DriveList[offset]._ConfigureLetter('?');
 
     --DriveCount; 

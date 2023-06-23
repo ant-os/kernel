@@ -10,11 +10,12 @@
 
 class Drive{
     public:
-        Drive(int32_t id, cstring lable);
+        Drive(int32_t id, cstring lable, size_t size);
 
         int32_t DriveID();
         char DriveLetter();
         cstring Label();
+        size_t Size();
 
         void _ConfigureLetter(char _letter);
 
@@ -22,6 +23,7 @@ class Drive{
         int32_t m_DriveID;
         cstring m_Label;
         char m_DriveLetter;
+        size_t m_Size;
 };
 
 extern uint32_t DriveCount;

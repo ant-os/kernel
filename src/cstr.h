@@ -25,16 +25,6 @@ const char* to_hstring(uint16_t value);
 const char* to_hstring(uint8_t value);
 const char* to_string(double value, uint8_t decimalPlaces);
 const char* to_string(double value);
-const char* format(const char* fmt, ...);
-size_t strlen(const char* str);
-char* strchr(const char* str, int c);
-int toupper(int c);
-int tolower(int c);
-char* strstr(const char* haystack, const char* needle);
-char* strtok(char* str, const char* delimiters);
-char* strpbrk(const char* str, const char* delimiters);
-char* strdup(const char* str);
-int strcmp(cstring a, cstring b);
 
 struct StringSplit
 {
