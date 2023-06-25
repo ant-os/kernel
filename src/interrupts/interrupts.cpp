@@ -789,6 +789,15 @@ INT_HANDLER(PIT)
     PIC_EndMaster();
 }
 
+void _InterruptHandler(interrupt_frame* frame)
+{
+    PINTERRUPT_VECTOR pUserVector = nullptr;
+
+    pUserVector = KeGetInterruptVector(frame->vec_no);
+
+    KeInvokeRawVector(pUserVector, frame);
+}
+
 /* PIC Functions */
 void PIC_EndMaster()
 {
@@ -844,4 +853,48 @@ void DisablePIC() {
     outb(PIC2_DATA, 0);
 
     sti();
+}
+
+INTERRUPT_VECTOR* InterruptVectors;
+size_t InterruptVectorCompacity = 0;
+size_t InterruptCount = 0;
+
+ANTSTATUS KeInitializeInterrupts()
+{
+    
+
+    return STATUS_SUCCESS;
+}
+
+
+PINTERRUPT_VECTOR KeGetInterruptVector(uint32_t num)
+{
+    return PINTERRUPT_VECTOR();
+}
+void KeSetInterruptVector(uint32_t num, PINTERRUPT_VECTOR pVector)
+{
+}
+
+void KeInvokeRawVector(PINTERRUPT_VECTOR pVector, interrupt_frame* _Frame)
+{
+    if (pVector == nullptr) return;
+
+    if (pVector->CallbackCount == 0){
+        Serial::WriteFormat(COM1, "WARNING: Tried to call Raw Interrupt Vector with no callbacks attached to it!\n    ¦ Vector=%p;CallbackBase=%p;VectorNumber=%d\n\n", pVector, pVector->Callbacks, pVector->Number);
+    }
+
+    for (size_t i = 0; i < pVector->CallbackCount; i++)
+    {
+        if (pVector->Callbacks[i] == nullptr){
+            Serial::WriteFormat(COM1, "WARNING: Invalid Callback at index %d for Vector(0x%p)!\n", i, pVector);
+        }else
+            __UNSAFE {
+                ANTSTATUS result = pVector->Callbacks[i](_Frame); /* This is UNSAFE! Just calling into unknow, unchecked code! */
+
+                /* We really need a logger with level and muti stream support! */
+                Serial::WriteFormat(COM1, "INFO: The Interrupt Callback at 0x%p returned 0x%x", pVector->Callbacks[i], result);
+            }
+    }
+    
+    
 }

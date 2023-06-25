@@ -2,6 +2,9 @@
 #include "types.h"
 #include "cstr.h"
 #include <stdarg.h>
+#include "userinput/keyboard.h"
+#include <ant/cstring.h>
+#include <ant/memory.h>
 
 
 void Console::Write(char c)
@@ -100,4 +103,34 @@ void Console::WriteFormat(const char* fmt, ...)
 
     va_end(args);
 
+}
+
+/// @warning Not yet Implemented! Becuase the Keyboard dosn't support it!
+/// @return 
+char Console::Read()
+{
+    return 0;
+}
+
+size_t Console::ReadBuffer(size_t length, char** buff)
+{
+    size_t bytes;
+
+    InputBufferPosition = INPUT_ACTIVE_POS;
+
+    while (KeyboardInProcess());
+
+    bytes = strlen(InputBuffer);
+
+    if (bytes == 0) return 0;
+
+    memcpy(InputBuffer, buff, length);
+
+    return bytes % length;
+
+}
+
+void Console::BlockInput(bool _Blocked)
+{
+    InputBufferPosition = (_Blocked ? INPUT_BLOCKED_POS : INPUT_ACTIVE_POS);
 }

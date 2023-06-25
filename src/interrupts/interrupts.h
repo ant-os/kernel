@@ -1,6 +1,8 @@
 #pragma once
 #include <stdint.h>
 #include <stddef.h>
+#include "../types.h"
+#include "../antstatus.h"
 
 #define sti() asm("sti")
 #define cli() asm("cli")
@@ -57,6 +59,7 @@ struct interrupt_frame {
    uint16_t ss, : 16; /**< Data segment for esp. */
 };
 
+
 FAULT_HANDLER(Page);
 FAULT_HANDLER(Double);
 FAULT_HANDLER(GP);
@@ -83,9 +86,43 @@ INT_HANDLER(Keyboard);
 INT_HANDLER(Mouse);
 INT_HANDLER(PIT);
 
+__attribute__((interrupt)) void _InterruptHandler(struct interrupt_frame* frame);
+
 #define INT(number) asm("int $" #number)
 
 void RemapPIC();
 void PIC_EndMaster();
 void PIC_EndSlave();
 void DisablePIC();
+
+__STD_TYPE ANTSTATUS(*InterruptCallback)(interrupt_frame* frame);
+
+enum InterruptType{
+   Exception,
+   Hardware,
+   Software,
+   Unknown
+};
+
+/* An Interrupt Vector wiht mutible or single callback(s) and Type, etc.!*/
+typedef struct _INTERRUPT_VECTOR {
+
+   uint32_t Number;
+   InterruptType Type;
+   void* Descriptor;
+   
+   // For Mutible Callbacks! 
+   size_t CallbackCount;
+   InterruptCallback* Callbacks;
+
+} INTERRUPT_VECTOR, *PINTERRUPT_VECTOR;
+
+
+
+/* ********************************************************************************** */
+
+void KeInvokeRawVector(PINTERRUPT_VECTOR pVector, interrupt_frame* _Frame) __UNSAFE;
+void KeSetInterruptVector(uint32_t num, PINTERRUPT_VECTOR pVector) __UNSAFE;
+PINTERRUPT_VECTOR KeGetInterruptVector(uint32_t num) __UNSAFE;
+void KeInvokeInterrupt(uint32_t num) __UNSAFE;
+ANTSTATUS KeInitializeInterrupts();

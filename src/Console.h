@@ -36,4 +36,7 @@ namespace Console{
     void WriteString(const char* s);
     void WriteFormat(const char* fmt, ...);
 
+    char Read();
+    size_t ReadBuffer(size_t maxLength, char** outputBuffer);
+    void BlockInput(bool _Blocked);
 }

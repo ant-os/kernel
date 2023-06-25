@@ -10,7 +10,7 @@
 #define INPUT_BLOCKED_POS -2
 #define INPUT_ACTIVE_POS 0
 
-#define InputBufferReady() InputBufferPosition == -1
+#define KeyboardInProcess() InputBufferPosition != -1
 
 extern char InputBuffer[INPUT_BUFFER_SIZE];
 extern int64_t InputBufferPosition;

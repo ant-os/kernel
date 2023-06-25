@@ -198,7 +198,7 @@ void BasicRenderer::FillRect(Point pos, int32_t w, int32_t h, color colour)
     int32_t x2 = x + w;
     int32_t y2 = y + h;
 
-    // TODO: Implement Cliping...
+    /// TODO: Implement Cliping...
 
     for (int i = x; i < x2; i++)
         for (int j = y; j < y2; j++)
