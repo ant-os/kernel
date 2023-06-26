@@ -763,6 +763,12 @@ FAULT_HANDLER(Triple)
         ;
 }
 
+__attribute__((interrupt)) void UtilCall_handler(interrupt_frame* frame){
+    Serial::WriteFormat(COM1, "Util Interrupt was called with ebx=%x\n", frame->ebx);
+
+    frame->eax = 0xAA32;
+}
+
 INT_HANDLER(Keyboard)
 {
 

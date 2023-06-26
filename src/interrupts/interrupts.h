@@ -85,6 +85,7 @@ FAULT_HANDLER(Triple);
 INT_HANDLER(Keyboard);
 INT_HANDLER(Mouse);
 INT_HANDLER(PIT);
+__attribute__((interrupt)) void UtilCall_handler(interrupt_frame* frame);
 
 __attribute__((interrupt)) void _InterruptHandler(struct interrupt_frame* frame);
 

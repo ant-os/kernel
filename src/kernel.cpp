@@ -44,6 +44,7 @@ extern "C" void _start(BootInfo * bootInfo)
     GlobalRenderer->SetColor(0xFFFFFF);
 
     GlobalRenderer->SetColor(0xFFFFFF);
+
     
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

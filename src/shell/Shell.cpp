@@ -4,6 +4,7 @@
 #include "Parser.h"
 
 bool g_IsRunning = false;
+Parser g_Parser = Parser();
 
 void InitializeShell()
 {
@@ -31,7 +32,9 @@ void ShellUpdate()
 
     Exec(std::string::from(InputBuffer));
 
-    Console::WriteFormat("%s {%u / %u bytes}\n", CommandLine, CommandLineBytes, INPUT_BUFFER_SIZE + 1);
+    CommandInfo* cmdInfo = g_Parser.GetCommandInfo(CommandLine);
+
+    Console::WriteFormat("\bThe Command \"%s\" is invalid! {argc=%u;argv=%p}\n", cmdInfo->cmd, cmdInfo->argc, cmdInfo->argv);
 
 }
 

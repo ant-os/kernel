@@ -194,6 +194,12 @@ void PrepareInterrupts()
         0x20
     );
 
+    ADD_INTERRUPT_HANDLER(
+        UtilCall,
+        IDT_TA_InterruptGate,
+        0xF0
+    );
+
     asm("lidt %0"
         :
         : "m"(idtr));
