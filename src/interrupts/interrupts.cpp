@@ -795,6 +795,11 @@ INT_HANDLER(PIT)
     PIC_EndMaster();
 }
 
+INT_HANDLER(VSync)
+{
+    Serial::WriteFormat(COM1, "Video Sync fired!\n");
+}
+
 void _InterruptHandler(interrupt_frame* frame)
 {
     PINTERRUPT_VECTOR pUserVector = nullptr;

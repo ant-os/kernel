@@ -28,11 +28,41 @@ namespace ACPI
         uint32_t CreatorID;
         uint32_t CreatorRevision;
     } __attribute__((packed));
+    
 
     struct MCFGHeader
     {
         SDTHeader Header;
         uint64_t Reserved;
+    } __attribute__((packed));
+
+    struct MADTRecordHeader {
+        uint8_t Type;
+        uint8_t Length;
+    } __attribute__((packed));
+
+    struct MADTRecord{
+        MADTRecordHeader Header;
+        uint8_t Data[];
+    } __attribute__((packed));
+
+    struct MADTLocalApicRecord {
+        MADTRecordHeader Header;
+        uint8_t ProcessorID;
+        uint8_t ApicID;
+        uint32_t Flags;
+    } __attribute__((packed));
+
+    struct MADTHeader
+    {
+        SDTHeader Header;
+        uint32_t LocalAPICAddress;
+        uint32_t Flags;
+    } __attribute__((packed));
+    
+    struct MADTTable {
+        MADTHeader Header;
+        MADTRecord Records[];
     } __attribute__((packed));
 
     struct DeviceConfig

@@ -17,6 +17,8 @@
 #include "memory/heap.h"
 #include "scheduling/pit/pit.h"
 #include "PCSpeakers.h"
+#include "apic.h"
+
 
 extern uint64_t _KernelStart;
 extern uint64_t _KernelEnd;

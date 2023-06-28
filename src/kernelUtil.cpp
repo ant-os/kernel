@@ -58,8 +58,8 @@ void PrepareMemory(BootInfo *bootInfo)
     int_##n->selector = 0x08
 
 IDTR idtr;
-static uint8_t master_mask = 0b11111001;
-static uint8_t slave_mask = 0b11101111;
+static uint8_t master_mask = 0b11111111;
+static uint8_t slave_mask = 0b11111111;
 void PrepareInterrupts()
 {
     idtr.Limit = 0x0FFF;
@@ -205,11 +205,22 @@ void PrepareInterrupts()
         : "m"(idtr));
 }
 
+
 void PrepareACPI(BootInfo *bootInfo)
 {
     ACPI::SDTHeader *xsdt = (ACPI::SDTHeader *)(bootInfo->rsdp->XSDTAddress);
 
     ACPI::MCFGHeader* mcfg = (ACPI::MCFGHeader*)ACPI::FindTable(xsdt, (char*)"MCFG");
+
+    // ACPI::FindTable(xsdt, (char*)"APIC");
+    Serial::WriteFormat(COM1, "%s=%u\n", xsdt->Signature, xsdt->Length);
+    ACPI::MADTTable* madt = (ACPI::MADTTable*)ACPI::FindTable(xsdt, (char*)"MADT");
+
+
+
+    Serial::WriteFormat(COM1, "MADT: %x\n", madt);
+
+    APIC::Init(madt);
 
     ShowInfo(COM1, "[Tables]");
 
@@ -248,6 +259,7 @@ KernelInfo *InitializeKernel(BootInfo *bootInfo)
 
 
     PrepareACPI(bootInfo);
+    // PrepareAPIC(bootInfo);
 
     outb(PIC1_DATA, master_mask);
     outb(PIC2_DATA, slave_mask);

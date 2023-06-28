@@ -45,10 +45,6 @@ extern "C" void _start(BootInfo * bootInfo)
 
     GlobalRenderer->SetColor(0xFFFFFF);
 
-    GlobalRenderer->SetPixel({0,0}, 0xffffff);
-
-
-
     // int x, y;
     // x = 10;
     // y = 10;
@@ -61,6 +57,7 @@ extern "C" void _start(BootInfo * bootInfo)
     //     for (int j = y; j < y2; j++)
     //         GlobalRenderer->SetPixel({i, j}, 0xffffff);
     
+    printf("Multiple APIC Description Table (MADT): shared<0x%x>\n", APIC::GetMADTTable());
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
