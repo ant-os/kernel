@@ -57,7 +57,9 @@ void HandleKeyboard(uint8_t scancode)
 
     if (ascii != 0)
     {
+        GlobalRenderer->FillRect(GlobalRenderer->CursorPosition, 8, 16, 0x000000);
         GlobalRenderer->PutChar(ascii);
+        GlobalRenderer->PutChar('\x5F', GlobalRenderer->CursorPosition.X, GlobalRenderer->CursorPosition.Y);
 
          /* Serial::WriteFormat(COM1, " %d ==> %d ==> %c ", scancode, ascii, ascii); */
 

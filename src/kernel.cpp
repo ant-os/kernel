@@ -45,13 +45,30 @@ extern "C" void _start(BootInfo * bootInfo)
 
     GlobalRenderer->SetColor(0xFFFFFF);
 
+    GlobalRenderer->SetPixel({0,0}, 0xffffff);
+
+
+
+    // int x, y;
+    // x = 10;
+    // y = 10;
+    // int32_t x2 = x + 20;
+    // int32_t y2 = y + 20;
+
+    // /// TODO: Implement Cliping...
+
+    // for (int i = x; i < x2; i++)
+    //     for (int j = y; j < y2; j++)
+    //         GlobalRenderer->SetPixel({i, j}, 0xffffff);
     
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         InitializeShell();
 
-        while (IsShellRunning()) ShellUpdate();
+        while (IsShellRunning()) {
+            ShellUpdate();
+            }
 
         // Exit the Shell!
         ExitSession(ActiveSessionID());

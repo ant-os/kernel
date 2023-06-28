@@ -119,12 +119,13 @@ size_t Console::ReadBuffer(size_t length, char** buff)
     InputBufferPosition = INPUT_ACTIVE_POS;
 
     while (KeyboardInProcess());
-
+    
     bytes = strlen(InputBuffer);
 
     if (bytes == 0) return 0;
 
     memcpy(InputBuffer, buff, length);
+
 
     return bytes % length;
 

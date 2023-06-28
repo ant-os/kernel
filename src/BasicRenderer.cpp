@@ -38,6 +38,8 @@ bool BasicRenderer::Print(const char* str)
 
 void BasicRenderer::PutChar(char chr, unsigned int xOff, unsigned int yOff)
 {
+
+
     if (chr == '\n') {
         Next();
         return;
@@ -54,10 +56,13 @@ void BasicRenderer::PutChar(char chr, unsigned int xOff, unsigned int yOff)
         }
         fontPtr++;
     }
+
+
 }
 
 void BasicRenderer::PutChar(char chr)
 {
+
     PutChar(chr, CursorPosition.X, CursorPosition.Y);
     CursorPosition.X += 8;
     if (CursorPosition.X + 8 > TargetFramebuffer->Width)
@@ -65,6 +70,7 @@ void BasicRenderer::PutChar(char chr)
         CursorPosition.X = 0;
         CursorPosition.Y += 16;
     }
+
 }
 
 void BasicRenderer::Next()
@@ -192,17 +198,17 @@ void BasicRenderer::DrawRect(Point pos, int32_t w, int32_t h, color colour)
 
 void BasicRenderer::FillRect(Point pos, int32_t w, int32_t h, color colour)
 {
-    int x, y;
+    long x, y;
     x = pos.X;
     y = pos.Y;
-    int32_t x2 = x + w;
-    int32_t y2 = y + h;
+    long x2 = x + w;
+    long y2 = y + h;
 
     /// TODO: Implement Cliping...
 
     for (int i = x; i < x2; i++)
         for (int j = y; j < y2; j++)
-            SetPixel(Point{ X: i, Y : j }, colour);
+            SetPixel({i, j}, colour);
 }
 
 void BasicRenderer::DrawTriangle(Point p1, Point p2, Point p3, color colour)
